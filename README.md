@@ -58,3 +58,28 @@ npm start
 - `v1`：支持导入 JSON / CSV
 - `v2`：半自动抓取公开链接元数据
 - `v3`：支持今日学习队列、复习提醒、学习笔记入口
+
+## 数据架构
+
+学习数据（订阅源、探索记录、课程、计划等）与项目代码**完全解耦**，存放在独立 git 仓库：
+
+- **数据仓库**：[github.com/yangxiao-ca/all-in-one-resources](https://github.com/yangxiao-ca/all-in-one-resources)（私有）
+- **本地路径**：`Learning/` 目录（已被 `.gitignore` 忽略，父项目不跟踪）
+- **Obsidian 同步**：`/Users/sam/Obsidian/程序员/Learning` 是软链接，指向项目内的 `Learning/`
+
+### 首次克隆后恢复数据
+
+```bash
+# 1. 克隆项目
+git clone <本项目地址>
+
+# 2. 克隆数据仓库到 Learning/
+git clone git@github.com:yangxiao-ca/all-in-one-resources.git Learning/
+
+# 3. 如果需要在 Obsidian 中看到，创建软链接
+ln -s "$(pwd)/Learning" /Users/sam/Obsidian/程序员/Learning
+```
+
+### 数据备份策略
+
+数据仓库独立于项目代码，即使项目目录丢失或被覆盖，只要远端仓库还在，`git clone` 即可恢复全部数据。建议在数据仓库中也配置定期自动备份。
