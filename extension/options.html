@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <title>学习架 · 连接设置</title>
+    <link rel="stylesheet" href="popup.css" />
+    <style>
+      body { min-width: 320px; padding: 16px; }
+      .option-row { display: flex; flex-direction: column; gap: 6px; margin-bottom: 14px; }
+      .option-row label { font-weight: 700; font-size: 13px; }
+      .hint { color: #68726c; font-size: 12px; line-height: 1.6; margin: 8px 0 0; }
+      .status { min-height: 18px; font-size: 12px; margin-top: 10px; }
+      .status.ok { color: #2f7d4f; }
+      .status.bad { color: #c0392b; }
+      .actions { display: flex; gap: 8px; margin-top: 12px; }
+    </style>
+  </head>
+  <body>
+    <div class="option-row">
+      <label for="endpoint-select">连接到哪个学习架？</label>
+      <select id="endpoint-select">
+        <option value="http://127.0.0.1:47831/api/v1">本机（Mac 上运行的服务）</option>
+        <option value="https://learn.dream3398.cn/api/v1">线上（learn.dream3398.cn）</option>
+        <option value="custom">自定义…</option>
+      </select>
+      <input id="endpoint-custom" type="url" placeholder="https://your-host/api/v1" hidden />
+    </div>
+    <p class="hint">
+      收下的链接会发送到所选地址的「探索池」。选线上地址时需要先在浏览器里登录过一次该站点，扩展才能通过网关验证。
+    </p>
+    <div class="actions">
+      <button id="save-button" class="primary-button" type="button">保存</button>
+      <button id="test-button" class="sidebar-button" type="button">测试连接</button>
+    </div>
+    <p id="status" class="status"></p>
+    <script src="options.js"></script>
+  </body>
+</html>

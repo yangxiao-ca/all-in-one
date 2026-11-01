@@ -1,0 +1,17 @@
+{
+  "manifest_version": 3,
+  "name": "学习架 · 收下当前页",
+  "description": "主动把当前网页收进学习驾驶舱的探索池。",
+  "version": "0.2.0",
+  "action": {
+    "default_title": "收下当前页面",
+    "default_popup": "popup.html"
+  },
+  "options_page": "options.html",
+  "permissions": ["activeTab", "scripting", "storage"],
+  "host_permissions": [
+    "http://127.0.0.1:47831/*",
+    "http://localhost:47831/*",
+    "https://learn.dream3398.cn/*"
+  ]
+}

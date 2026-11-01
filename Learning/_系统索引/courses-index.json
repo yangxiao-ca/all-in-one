@@ -1,0 +1,46 @@
+{
+  "generatedAt": "2026-11-01T05:28:04.587Z",
+  "version": 1,
+  "courses": [
+    {
+      "id": "11209ef5-80d3-4823-b7d2-dabc5d53875b",
+      "title": "计算机与AI基础",
+      "platform": "",
+      "status": "learning",
+      "priority": "high",
+      "order": 0,
+      "updatedAt": "2026-09-01T17:44:39.032Z",
+      "filePath": "04-课程/计算机与AI基础--11209ef5.md"
+    },
+    {
+      "id": "4a06abb0-ffee-4d87-ab5b-ba359a64fa1c",
+      "title": "Agent冲刺工程营",
+      "platform": "",
+      "status": "paused",
+      "priority": "high",
+      "order": 0,
+      "updatedAt": "2026-09-02T10:56:26.277Z",
+      "filePath": "04-课程/Agent冲刺工程营--4a06abb0.md"
+    },
+    {
+      "id": "4f758936-f913-458c-b44a-5da2fc823685",
+      "title": "企业微信的AI应用",
+      "platform": "",
+      "status": "learning",
+      "priority": "medium",
+      "order": 0,
+      "updatedAt": "2026-11-01T05:28:04.585Z",
+      "filePath": "04-课程/企业微信的AI应用--4f758936.md"
+    },
+    {
+      "id": "02d10abf-cffb-4a4a-ae61-ea56a94485a7",
+      "title": "Vibe Coding",
+      "platform": "网站",
+      "status": "queued",
+      "priority": "high",
+      "order": 2,
+      "updatedAt": "2026-09-01T16:51:44.214Z",
+      "filePath": "04-课程/Vibe Coding--02d10abf.md"
+    }
+  ]
+}

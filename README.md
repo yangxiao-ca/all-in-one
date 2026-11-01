@@ -16,8 +16,11 @@ Obsidian 本地连接器的接口与安全设计见 [PHASE_1_CONNECTOR_DESIGN.md
 - 记录“看到哪里了”
 - 一键继续打开原始链接
 - 导出你自己的课程清单
+- Chrome / Edge 扩展一键收下当前网页到探索池（安装见 [extension/README.md](/Users/sam/01-ai-lab/all-in-one/extension/README.md)）
 
 ## 怎么打开
+
+在 Mac 上，直接双击桌面的“学习驾驶舱”图标即可启动服务并打开页面。
 
 现在推荐通过本机连接器启动。在 Finder 中双击 `启动学习驾驶舱.command`，它会启动本地服务并自动打开驾驶舱。
 
@@ -28,6 +31,10 @@ npm start
 ```
 
 然后在浏览器打开 `http://127.0.0.1:47831`。这样课程会保存到 Obsidian Vault；直接打开 [index.html](/Users/sam/01-ai-lab/all-in-one/index.html) 仍可作为无连接器时的本地回退，但不会获得可靠持久化。
+
+## 浏览器扩展
+
+扩展在 [extension](/Users/sam/01-ai-lab/all-in-one/extension) 目录。首次使用需要在 Chrome 或 Edge 的扩展管理页打开“开发者模式”，然后选择“加载已解压的扩展程序”。完整步骤见 [extension/README.md](/Users/sam/01-ai-lab/all-in-one/extension/README.md)。
 
 ## 为什么先这样做
 

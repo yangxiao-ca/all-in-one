@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>收下当前页</title>
+    <link rel="stylesheet" href="popup.css" />
+  </head>
+  <body>
+    <main class="popup-shell">
+      <header>
+        <p class="eyebrow">LEARNING SHELF</p>
+        <h1>先收下，再决定。</h1>
+        <p id="page-site" class="site-label">正在读取当前页面</p>
+      </header>
+
+      <form id="capture-form">
+        <label>
+          <span>标题</span>
+          <input id="title-input" name="title" required />
+        </label>
+        <label>
+          <span>链接</span>
+          <input id="url-input" name="url" type="url" required />
+        </label>
+        <div class="field-row">
+          <label>
+            <span>平台</span>
+            <input id="platform-input" name="platform" placeholder="自动识别" />
+          </label>
+          <label>
+            <span>状态</span>
+            <select name="engagement">
+              <option value="saved">刚收下</option>
+              <option value="seen">只是看过</option>
+              <option value="insight">有启发</option>
+              <option value="revisit">想再看</option>
+              <option value="deepen">想深入</option>
+            </select>
+          </label>
+        </div>
+        <label>
+          <span>归属订阅源（可选）</span>
+          <select id="source-input" name="sourceId"><option value="">暂不归属</option></select>
+        </label>
+        <label>
+          <span>留一句想法（可选）</span>
+          <textarea name="takeaway" rows="2" placeholder="为什么值得留下？"></textarea>
+        </label>
+        <button id="submit-button" type="submit">收进探索池</button>
+      </form>
+
+      <footer>
+        <p id="status-message" role="status">只会收录你主动点击保存的页面。</p>
+        <button id="retry-button" class="text-button" type="button" hidden>重试待发送内容</button>
+        <a href="http://127.0.0.1:47831/" target="_blank" rel="noreferrer">打开学习架</a>
+      </footer>
+    </main>
+    <script type="module" src="popup.js"></script>
+  </body>
+</html>

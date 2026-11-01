@@ -1,9 +1,15 @@
 {
   "name": "learning-cockpit",
   "private": true,
+  "version": "0.2.0",
   "type": "module",
+  "description": "学习聚合页：课程、探索记录与订阅源收进一个页面，数据落在 Obsidian Vault。",
+  "engines": {
+    "node": ">=20"
+  },
   "scripts": {
     "start": "node server.mjs",
-    "check": "node --check server.mjs && node --check app.js"
+    "check": "node --check server.mjs && node --check app.js",
+    "icons": "python3 scripts/make-icons.py"
   }
 }

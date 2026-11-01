@@ -1,0 +1,19 @@
+:root { color:#1c2923; background:#f6f2e9; font-family:"Noto Serif SC","Songti SC",serif; }
+* { box-sizing:border-box; }
+body { width:360px; margin:0; }
+.popup-shell { min-height:510px; padding:24px; background:radial-gradient(circle at 94% 5%,rgba(203,223,103,.4),transparent 35%),#f6f2e9; }
+header { margin-bottom:20px; }
+.eyebrow { margin:0 0 6px; color:#537249; font-family:"DM Sans",sans-serif; font-size:.65rem; font-weight:700; letter-spacing:.14em; }
+h1 { margin:0; font-size:1.55rem; line-height:1.25; }
+.site-label { overflow:hidden; margin:9px 0 0; color:#6c756d; font-family:"DM Sans",sans-serif; font-size:.78rem; text-overflow:ellipsis; white-space:nowrap; }
+form { display:grid; gap:12px; }
+label { display:grid; gap:6px; color:#617067; font-family:"DM Sans",sans-serif; font-size:.75rem; font-weight:700; }
+input,select,textarea { width:100%; padding:10px 11px; border:1px solid rgba(28,41,35,.16); border-radius:10px; color:#1c2923; background:rgba(255,253,248,.85); font:inherit; font-size:.82rem; font-weight:500; }
+textarea { resize:vertical; }
+.field-row { display:grid; grid-template-columns:1fr 1fr; gap:9px; }
+#submit-button { min-height:42px; border:0; border-radius:11px; color:#1c2923; background:#cbe067; font:700 .86rem "DM Sans",sans-serif; cursor:pointer; }
+#submit-button:disabled { opacity:.58; cursor:wait; }
+footer { display:grid; gap:7px; margin-top:16px; padding-top:13px; border-top:1px solid rgba(28,41,35,.12); }
+footer p,footer a,.text-button { margin:0; color:#6c756d; font:500 .72rem/1.45 "DM Sans",sans-serif; }
+footer a { color:#315b4b; font-weight:700; text-decoration:none; }
+.text-button { justify-self:start; padding:0; border:0; color:#a74c32; background:transparent; cursor:pointer; }

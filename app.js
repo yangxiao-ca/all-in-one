@@ -10,12 +10,12 @@ const demoCourses = [
 
 const statusLabelMap = { learning: "学习中", queued: "想学", done: "已完成", paused: "暂停" };
 const elements = {
-  planCard: document.querySelector("#plan-card"), planObjective: document.querySelector("#plan-objective"), planDetail: document.querySelector("#plan-detail"), openPlanDialog: document.querySelector("#open-plan-dialog"), planDialog: document.querySelector("#plan-dialog"), closePlanDialog: document.querySelector("#close-plan-dialog"), planForm: document.querySelector("#plan-form"), planCourseInput: document.querySelector("#plan-course-input"),
+  planCard: document.querySelector("#plan-card"), planObjective: document.querySelector("#plan-objective"), planDetail: document.querySelector("#plan-detail"), openPlanDialog: document.querySelector("#open-plan-dialog"), openDeepTutor: document.querySelector("#open-deeptutor"), planDialog: document.querySelector("#plan-dialog"), closePlanDialog: document.querySelector("#close-plan-dialog"), planForm: document.querySelector("#plan-form"), planCourseInput: document.querySelector("#plan-course-input"),
   totalCount: document.querySelector("#total-count"), activeCount: document.querySelector("#active-count"), priorityCount: document.querySelector("#priority-count"),
   searchInput: document.querySelector("#search-input"), platformFilter: document.querySelector("#platform-filter"), statusFilter: document.querySelector("#status-filter"), priorityFilter: document.querySelector("#priority-filter"), resetFilters: document.querySelector("#reset-filters"),
   form: document.querySelector("#course-form"), exportButton: document.querySelector("#export-button"), list: document.querySelector("#course-list"), template: document.querySelector("#course-card-template"), statFilters: document.querySelectorAll(".stat-filter"),
   addDialog: document.querySelector("#add-dialog"), filterDialog: document.querySelector("#filter-dialog"), editDialog: document.querySelector("#edit-dialog"), openAddDialog: document.querySelector("#open-add-dialog"), closeAddDialog: document.querySelector("#close-add-dialog"), cancelAddDialog: document.querySelector("#cancel-add-dialog"), closeFilterDialog: document.querySelector("#close-filter-dialog"), closeEditDialog: document.querySelector("#close-edit-dialog"), cancelEditDialog: document.querySelector("#cancel-edit-dialog"), editForm: document.querySelector("#edit-form"), editCoverFile: document.querySelector("#edit-cover-file"), editCoverPreview: document.querySelector("#edit-cover-preview"), removeCoverImage: document.querySelector("#remove-cover-image"), libraryTitle: document.querySelector("#library-title"), courseCountLabel: document.querySelector("#course-count-label"),
-  explorationDialog: document.querySelector("#exploration-dialog"), openExplorationDialog: document.querySelector("#open-exploration-dialog"), openExplorationList: document.querySelector("#open-exploration-list"), closeExplorationDialog: document.querySelector("#close-exploration-dialog"), explorationForm: document.querySelector("#exploration-form"), explorationList: document.querySelector("#exploration-list"), explorationTitle: document.querySelector("#exploration-title"), resetExplorationSource: document.querySelector("#reset-exploration-source"), explorationDialogTitle: document.querySelector("#exploration-dialog-title"), explorationSubmitButton: document.querySelector("#exploration-submit-button"),
+  explorationDialog: document.querySelector("#exploration-dialog"), openExplorationDialog: document.querySelector("#open-exploration-dialog"), openExplorationList: document.querySelector("#open-exploration-list"), closeExplorationDialog: document.querySelector("#close-exploration-dialog"), explorationForm: document.querySelector("#exploration-form"), explorationList: document.querySelector("#exploration-list"), explorationTitle: document.querySelector("#exploration-title"), resetExplorationSource: document.querySelector("#reset-exploration-source"), explorationDialogTitle: document.querySelector("#exploration-dialog-title"), explorationSubmitButton: document.querySelector("#exploration-submit-button"), explorationCaptureZone: document.querySelector("#exploration-capture-zone"), explorationCaptureFeedback: document.querySelector("#exploration-capture-feedback"),
   sourceDialog: document.querySelector("#source-dialog"), openSourceDialog: document.querySelector("#open-source-dialog"), openSourceList: document.querySelector("#open-source-list"), closeSourceDialog: document.querySelector("#close-source-dialog"), sourceForm: document.querySelector("#source-form"), sourceList: document.querySelector("#source-list"), sourceDialogTitle: document.querySelector("#source-dialog-title"), sourceSubmitButton: document.querySelector("#source-submit-button"), explorationSourceInput: document.querySelector("#exploration-source-input"),
 };
 
@@ -90,7 +90,22 @@ async function initializeCourses() {
   renderPlan();
   if (connectorReady) connectVaultEvents();
 }
-function renderPlan() { const course = courses.find((item) => item.id === currentPlan?.primaryCourseId); elements.planObjective.textContent = currentPlan?.objective || "还没有当前学习计划"; elements.planDetail.textContent = currentPlan ? `${course?.title || "未选择主线"} · 下一步：${currentPlan.nextAction || "未填写"}` : "先选一门主线课程，再写下这阶段最小的下一步。"; elements.openPlanDialog.textContent = currentPlan ? "编辑计划" : "建立计划"; }
+function renderPlan() {
+  const course = courses.find((item) => item.id === currentPlan?.primaryCourseId);
+  elements.planObjective.textContent = currentPlan?.objective || "还没有当前学习计划";
+  if (!currentPlan) elements.planDetail.textContent = "先选一门主线课程，再写下这阶段最小的下一步。";
+  else {
+    elements.planDetail.replaceChildren();
+    [["主线", course?.title || "未选择主线"], ["节奏", currentPlan.rhythm || "尚未设置"], ["下一步", currentPlan.nextAction || "未填写"], ["完成", currentPlan.completionCriteria || "未填写"]].forEach(([label, value]) => {
+      const item = document.createElement("span"); const name = document.createElement("b"); name.textContent = label; item.append(name, document.createTextNode(value)); elements.planDetail.append(item);
+    });
+  }
+  elements.openPlanDialog.textContent = currentPlan ? "编辑计划" : "建立计划";
+  elements.openDeepTutor.hidden = !currentPlan?.deepTutorLink;
+  if (currentPlan?.deepTutorLink) elements.openDeepTutor.href = currentPlan.deepTutorLink;
+}
+function openPlanDialog() { elements.planCourseInput.innerHTML = ""; courses.forEach((course) => elements.planCourseInput.add(new Option(course.title, course.id))); if (!courses.length) { window.alert("请先添加一门课程，再建立学习计划。"); return; } elements.planForm.elements.objective.value = currentPlan?.objective || ""; elements.planForm.elements.primaryCourseId.value = currentPlan?.primaryCourseId || courses[0].id; elements.planForm.elements.rhythm.value = currentPlan?.rhythm || ""; elements.planForm.elements.completionCriteria.value = currentPlan?.completionCriteria || ""; elements.planForm.elements.nextAction.value = currentPlan?.nextAction || ""; elements.planForm.elements.deepTutorLink.value = currentPlan?.deepTutorLink || ""; elements.planDialog.showModal(); }
+async function handlePlanSubmit(event) { event.preventDefault(); if (!elements.planForm.reportValidity()) return; const data = new FormData(elements.planForm); const plan = { objective: String(data.get("objective")).trim(), primaryCourseId: String(data.get("primaryCourseId")), rhythm: String(data.get("rhythm") || "").trim(), completionCriteria: String(data.get("completionCriteria")).trim(), nextAction: String(data.get("nextAction")).trim(), deepTutorLink: String(data.get("deepTutorLink") || "").trim() }; if (currentPlan && currentPlan.primaryCourseId !== plan.primaryCourseId && !window.confirm("替换主线课程会改变当前学习方向。确认替换吗？")) return; try { const result = await apiRequest("/plan", { method: "PUT", body: JSON.stringify({ plan, revision: currentPlan?.revision }) }); currentPlan = result.plan; renderPlan(); elements.planDialog.close(); } catch (error) { window.alert(error.message); } }
 function connectVaultEvents() {
   const events = new EventSource(`${API_BASE}/events`);
   const refreshCourses = async () => {
@@ -105,6 +120,7 @@ function connectVaultEvents() {
     catch { events.close(); }
   });
   events.addEventListener("sources-changed", async () => { try { await loadSources(); renderSources(); } catch { events.close(); } });
+  events.addEventListener("plan-changed", async () => { try { await loadPlan(); renderPlan(); } catch { events.close(); } });
 }
 function renderSources() {
   const selectedSourceId = elements.explorationSourceInput.value;
@@ -131,17 +147,13 @@ function renderExplorations() {
     const card = document.createElement("a");
     card.className = "exploration-card"; card.href = record.url || "#"; card.target = "_blank"; card.rel = "noreferrer";
     const source = sources.find((item) => item.id === record.sourceId);
-    const meta = document.createElement("span"); meta.textContent = `${record.platform || "网页"} · ${source ? `来自 ${source.title}` : record.engagement}`;
+    const engagementLabels = { saved: "刚收下", seen: "只是看过", insight: "有启发", revisit: "想再看", deepen: "想深入" };
+    const meta = document.createElement("span"); meta.textContent = `${record.platform || "网页"}${source ? ` · 来自 ${source.title}` : ""}`;
     const title = document.createElement("strong"); title.textContent = record.title;
     const note = document.createElement("p"); note.textContent = record.takeaway || record.question || "快速收下，稍后再决定。";
-    card.append(meta, title, note);
-    const actions = document.createElement("div"); actions.className = "exploration-actions";
-    [["只是看过", "seen"], ["有启发", "insight"], ["想再看", "revisit"], ["想深入", "deepen"]].forEach(([label, engagement]) => {
-      const button = document.createElement("button"); button.type = "button"; button.textContent = label;
-      button.addEventListener("click", () => updateExplorationEngagement(record, engagement));
-      actions.append(button);
-    });
-    const tools = document.createElement("div"); tools.className = "exploration-tools"; const edit = document.createElement("button"); edit.type = "button"; edit.textContent = "编辑"; edit.addEventListener("click", () => editExploration(record)); const remove = document.createElement("button"); remove.type = "button"; remove.textContent = "删除"; remove.addEventListener("click", () => deleteExploration(record)); tools.append(edit, remove); entry.append(card, actions, tools); elements.explorationList.append(entry);
+    const status = document.createElement("em"); status.className = `exploration-status status-${record.engagement || "saved"}`; status.textContent = engagementLabels[record.engagement] || "刚收下";
+    card.append(meta, title, note, status);
+    const tools = document.createElement("div"); tools.className = "exploration-tools"; const edit = document.createElement("button"); edit.type = "button"; edit.textContent = "编辑"; edit.addEventListener("click", () => editExploration(record)); const remove = document.createElement("button"); remove.type = "button"; remove.textContent = "删除"; remove.addEventListener("click", () => deleteExploration(record)); tools.append(edit, remove); entry.append(card, tools); elements.explorationList.append(entry);
   });
 }
 async function updateExplorationEngagement(record, engagement) {
@@ -164,18 +176,38 @@ async function handleExplorationSubmit(event) {
   if (!elements.explorationForm.reportValidity()) return;
   const data = new FormData(elements.explorationForm);
   const takeaway = String(data.get("takeaway") || "").trim();
-  const exploration = { title: String(data.get("title")).trim(), url: String(data.get("url")).trim(), platform: String(data.get("platform")).trim() || "未标注来源", sourceId: String(data.get("sourceId") || "") || null, captureLevel: takeaway ? "trace" : "quick", engagement: takeaway ? "insight" : "saved", takeaway };
+  const exploration = { title: String(data.get("title")).trim(), url: String(data.get("url")).trim(), platform: String(data.get("platform")).trim() || "未标注来源", sourceId: String(data.get("sourceId") || "") || null, captureLevel: takeaway ? "trace" : "quick", engagement: String(data.get("engagement") || "saved"), takeaway };
   try { if (editingExploration) await apiRequest(`/explorations/${encodeURIComponent(editingExploration.id)}`, { method: "PATCH", body: JSON.stringify({ exploration: { ...editingExploration, ...exploration }, revision: editingExploration.revision }) }); else await apiRequest("/explorations", { method: "POST", body: JSON.stringify({ exploration }) }); elements.explorationForm.reset(); editingExploration = null; elements.explorationDialog.close(); }
   catch (error) { window.alert(error.message); }
 }
-function editExploration(record) { editingExploration = record; elements.explorationDialogTitle.textContent = "编辑探索记录"; elements.explorationSubmitButton.textContent = "保存修改"; elements.explorationForm.elements.title.value = record.title; elements.explorationForm.elements.url.value = record.url; elements.explorationForm.elements.platform.value = record.platform; elements.explorationForm.elements.sourceId.value = record.sourceId || ""; elements.explorationForm.elements.takeaway.value = record.takeaway || ""; elements.explorationDialog.showModal(); }
+function editExploration(record) { editingExploration = record; elements.explorationDialogTitle.textContent = "编辑探索记录"; elements.explorationSubmitButton.textContent = "保存修改"; elements.explorationForm.elements.title.value = record.title; elements.explorationForm.elements.url.value = record.url; elements.explorationForm.elements.platform.value = record.platform; elements.explorationForm.elements.engagement.value = record.engagement || "saved"; elements.explorationForm.elements.sourceId.value = record.sourceId || ""; elements.explorationForm.elements.takeaway.value = record.takeaway || ""; elements.explorationDialog.showModal(); }
 async function deleteExploration(record) { if (!window.confirm(`删除探索记录“${record.title}”？可从备份恢复。`)) return; try { await apiRequest(`/explorations/${encodeURIComponent(record.id)}`, { method: "DELETE" }); } catch (error) { window.alert(error.message); } }
-function fillExplorationFromDroppedText(text) {
-  const urlMatch = String(text || "").match(/https?:\/\/[^\s"<>]+/);
-  if (!urlMatch) return;
+function inferPlatform(url) {
+  try {
+    const hostname = new URL(url).hostname.toLowerCase();
+    if (hostname.includes("bilibili.com")) return "B站";
+    if (hostname.includes("youtube.com") || hostname.includes("youtu.be")) return "YouTube";
+    if (hostname.includes("mp.weixin.qq.com")) return "微信公众号";
+    if (hostname.includes("xiaohongshu.com")) return "小红书";
+  } catch {}
+  return "";
+}
+function titleFromCapturedText(text, html, url) {
+  const anchorTitle = String(html).match(/<a[^>]*>([\s\S]*?)<\/a>/i)?.[1]?.replace(/<[^>]+>/g, "").replace(/\s+/g, " ").trim();
+  if (anchorTitle) return anchorTitle;
+  const candidate = String(text || "").split(/\r?\n/).map((line) => line.replace(/https?:\/\/\S+/g, "").replace(/[【】]/g, "").trim()).find((line) => line.length >= 2 && line.length <= 120);
+  if (candidate) return candidate;
+  try { return new URL(url).hostname.replace(/^www\./, ""); } catch { return ""; }
+}
+function fillExplorationFromCapturedContent(text, html = "") {
+  const urlMatch = String(text || html || "").match(/https?:\/\/[^\s"<>，。；）】]+/);
+  if (!urlMatch) { elements.explorationCaptureFeedback.textContent = "没有找到链接。请把链接或包含链接的消息放进来。"; return; }
   const url = urlMatch[0]; const form = elements.explorationForm;
   form.elements.url.value = url;
-  if (!form.elements.title.value.trim()) { try { form.elements.title.value = new URL(url).hostname.replace(/^www\./, ""); } catch {} }
+  if (!form.elements.title.value.trim()) form.elements.title.value = titleFromCapturedText(text, html, url);
+  if (!form.elements.platform.value.trim()) form.elements.platform.value = inferPlatform(url);
+  const platform = form.elements.platform.value.trim();
+  elements.explorationCaptureFeedback.textContent = `已带入${platform ? ` ${platform} 内容` : "链接"}，确认标题后即可收下。`;
 }
 async function handleSourceSubmit(event) {
   event.preventDefault();
@@ -403,9 +435,11 @@ elements.searchInput.addEventListener("input", renderCourses);
 elements.resetFilters.addEventListener("click", resetFilters);
 elements.exportButton.addEventListener("click", exportCourses);
 elements.openAddDialog.addEventListener("click", () => elements.addDialog.showModal());
-async function openNewExplorationDialog() { editingExploration = null; elements.explorationForm.reset(); elements.explorationDialogTitle.textContent = "先收下，再决定。"; elements.explorationSubmitButton.textContent = "快速收下"; await loadExplorations(); renderExplorations(); elements.explorationDialog.showModal(); }
+async function openNewExplorationDialog() { editingExploration = null; elements.explorationForm.reset(); elements.explorationCaptureFeedback.textContent = ""; elements.explorationDialogTitle.textContent = "先收下，再决定。"; elements.explorationSubmitButton.textContent = "快速收下"; await loadExplorations(); renderExplorations(); elements.explorationDialog.showModal(); }
 elements.openExplorationDialog.addEventListener("click", openNewExplorationDialog);
 elements.openExplorationList.addEventListener("click", openNewExplorationDialog);
+elements.openPlanDialog.addEventListener("click", openPlanDialog);
+elements.closePlanDialog.addEventListener("click", () => elements.planDialog.close());
 elements.resetExplorationSource.addEventListener("click", () => { activeExplorationSourceId = null; renderExplorations(); });
 elements.closeExplorationDialog.addEventListener("click", () => elements.explorationDialog.close());
 function openNewSourceDialog() { editingSource = null; elements.sourceForm.reset(); elements.sourceDialogTitle.textContent = "关注一个来源"; elements.sourceSubmitButton.textContent = "加入订阅源"; elements.sourceDialog.showModal(); }
@@ -428,8 +462,27 @@ elements.filterDialog.addEventListener("close", renderCourses);
 elements.form.addEventListener("submit", handleFormSubmit);
 elements.editForm.addEventListener("submit", handleEditFormSubmit);
 elements.explorationForm.addEventListener("submit", handleExplorationSubmit);
-elements.explorationForm.elements.url.addEventListener("paste", (event) => setTimeout(() => fillExplorationFromDroppedText(event.clipboardData?.getData("text/plain") || elements.explorationForm.elements.url.value), 0));
+elements.explorationCaptureZone.addEventListener("click", () => elements.explorationForm.elements.url.focus());
+elements.explorationCaptureZone.addEventListener("paste", (event) => { event.preventDefault(); fillExplorationFromCapturedContent(event.clipboardData?.getData("text/plain") || "", event.clipboardData?.getData("text/html") || ""); });
+elements.explorationForm.elements.url.addEventListener("paste", (event) => setTimeout(() => fillExplorationFromCapturedContent(event.clipboardData?.getData("text/plain") || elements.explorationForm.elements.url.value), 0));
+elements.explorationDialog.addEventListener("dragenter", (event) => { event.preventDefault(); elements.explorationCaptureZone.classList.add("is-dragging"); });
 elements.explorationDialog.addEventListener("dragover", (event) => event.preventDefault());
-elements.explorationDialog.addEventListener("drop", (event) => { event.preventDefault(); fillExplorationFromDroppedText(event.dataTransfer.getData("text/uri-list") || event.dataTransfer.getData("text/plain") || event.dataTransfer.getData("text/html")); });
+elements.explorationDialog.addEventListener("dragleave", (event) => { if (event.target === elements.explorationDialog) elements.explorationCaptureZone.classList.remove("is-dragging"); });
+elements.explorationDialog.addEventListener("drop", (event) => { event.preventDefault(); elements.explorationCaptureZone.classList.remove("is-dragging"); const plainText = event.dataTransfer.getData("text/uri-list") || event.dataTransfer.getData("text/plain"); fillExplorationFromCapturedContent(plainText || event.dataTransfer.getData("text/html"), event.dataTransfer.getData("text/html")); });
 elements.sourceForm.addEventListener("submit", handleSourceSubmit);
+elements.planForm.addEventListener("submit", handlePlanSubmit);
 initializeCourses();
+
+// PWA：注册 Service Worker。本地 file:// 打开或旧浏览器会静默跳过。
+if ("serviceWorker" in navigator && location.protocol.startsWith("http")) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("/sw.js").catch((error) => console.warn("Service Worker 注册失败：", error));
+  });
+}
+
+// 手机端安全区：把底部安全区高度暴露成 CSS 变量，供 styles.css 使用
+if (window.visualViewport) {
+  const applyViewport = () => document.documentElement.style.setProperty("--app-viewport-height", `${window.visualViewport.height}px`);
+  applyViewport();
+  window.visualViewport.addEventListener("resize", applyViewport);
+}

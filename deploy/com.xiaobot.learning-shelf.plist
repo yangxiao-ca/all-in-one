@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.xiaobot.learning-shelf</string>
+    <key>ProgramArguments</key>
+    <array>
+        <string>/opt/homebrew/bin/node</string>
+        <string>server.mjs</string>
+    </array>
+    <key>WorkingDirectory</key>
+    <string>/Users/xiaobot/Applications/learning-shelf</string>
+    <key>EnvironmentVariables</key>
+    <dict>
+        <key>PORT</key>
+        <string>47831</string>
+        <key>HOST</key>
+        <string>127.0.0.1</string>
+        <key>LEARNING_VAULT_ROOT</key>
+        <string>/Users/xiaobot/Documents/程序员</string>
+        <key>ALLOWED_HOSTS</key>
+        <string>learn.dream3398.cn</string>
+        <key>TRUST_PROXY</key>
+        <string>1</string>
+        <key>NODE_ENV</key>
+        <string>production</string>
+    </dict>
+    <key>RunAtLoad</key>
+    <true/>
+    <key>KeepAlive</key>
+    <true/>
+    <key>ProcessType</key>
+    <string>Background</string>
+    <key>StandardOutPath</key>
+    <string>/Users/xiaobot/Library/Logs/learning-shelf.log</string>
+    <key>StandardErrorPath</key>
+    <string>/Users/xiaobot/Library/Logs/learning-shelf.err.log</string>
+</dict>
+</plist>
