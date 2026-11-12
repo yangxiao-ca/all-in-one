@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>Label</key>
+  <string>local.learning-cockpit</string>
+  <key>ProgramArguments</key>
+  <array>
+    <string>/Users/sam/Desktop/学习驾驶舱.app/Contents/MacOS/run-service</string>
+  </array>
+  <key>RunAtLoad</key>
+  <true/>
+  <key>KeepAlive</key>
+  <true/>
+  <key>StandardOutPath</key>
+  <string>/Users/sam/Library/Logs/learning-cockpit.log</string>
+  <key>StandardErrorPath</key>
+  <string>/Users/sam/Library/Logs/learning-cockpit-error.log</string>
+  <key>ProcessType</key>
+  <string>Background</string>
+</dict>
+</plist>

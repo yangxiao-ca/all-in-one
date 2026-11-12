@@ -1,0 +1,10 @@
+#!/bin/zsh
+
+export PATH="/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin"
+export PORT="47831"
+export HOST="127.0.0.1"
+export NODE_ENV="production"
+export LEARNING_VAULT_ROOT="/Users/sam/01-ai-lab/all-in-one/Learning"
+
+cd "/Users/sam/01-ai-lab/all-in-one" || exit 1
+exec /opt/homebrew/bin/node server.mjs

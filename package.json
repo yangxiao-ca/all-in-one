@@ -10,6 +10,9 @@
   "scripts": {
     "start": "node server.mjs",
     "check": "node --check server.mjs && node --check app.js",
-    "icons": "python3 scripts/make-icons.py"
+    "icons": "python3 scripts/make-icons.py",
+    "install:desktop": "zsh scripts/install-desktop-app.sh",
+    "backup": "zsh scripts/backup-learning.sh",
+    "verify:backup": "zsh scripts/verify-learning-backup.sh"
   }
 }

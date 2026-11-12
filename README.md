@@ -20,9 +20,9 @@ Obsidian 本地连接器的接口与安全设计见 [PHASE_1_CONNECTOR_DESIGN.md
 
 ## 怎么打开
 
-在 Mac 上，直接双击桌面的“学习驾驶舱”图标即可启动服务并打开页面。
+在 Mac 上，直接双击桌面的 **“学习驾驶舱”应用图标**即可启动服务并打开页面。该应用固定访问 `http://127.0.0.1:47831`，并通过 `LaunchAgent` 在登录后自动启动后台服务。
 
-现在推荐通过本机连接器启动。在 Finder 中双击 `启动学习驾驶舱.command`，它会启动本地服务并自动打开驾驶舱。
+`启动学习驾驶舱.command` 保留为备用入口。如需重建桌面应用，运行 `npm run install:desktop`。
 
 也可以在终端运行：
 
@@ -82,4 +82,29 @@ ln -s "$(pwd)/Learning" /Users/sam/Obsidian/程序员/Learning
 
 ### 数据备份策略
 
-数据仓库独立于项目代码，即使项目目录丢失或被覆盖，只要远端仓库还在，`git clone` 即可恢复全部数据。建议在数据仓库中也配置定期自动备份。
+数据仓库独立于项目代码，即使项目目录丢失或被覆盖，只要远端仓库还在，`git clone` 即可恢复全部数据。
+
+当前已配置三层保障：
+
+1. **固定入口**：桌面 `学习驾驶舱.app` 始终通过本机连接器打开，避免把浏览器 `localStorage` 当作正式数据源。
+2. **后台自启**：`local.learning-cockpit` LaunchAgent 在登录时启动服务，并在异常退出后自动重启；服务固定读写项目内的 `Learning/`。
+3. **自动异地备份**：`local.learning-cockpit-backup` LaunchAgent 每 5 分钟检查一次，把所有数据变更提交到本地 Git 并推送到私有仓库 `all-in-one-resources`。网络失败不会删除本地提交，后续任务会自动重试推送。
+
+手动执行一次备份：
+
+```bash
+npm run backup
+```
+
+从 GitHub 全新克隆并验证课程索引与课程文件是否完整：
+
+```bash
+npm run verify:backup
+```
+
+运行日志位于：
+
+- `~/Library/Logs/learning-cockpit.log`
+- `~/Library/Logs/learning-cockpit-error.log`
+- `~/Library/Logs/learning-cockpit-backup.log`
+- `~/Library/Logs/learning-cockpit-backup-error.log`

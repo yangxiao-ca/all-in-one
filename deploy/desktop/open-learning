@@ -1,0 +1,22 @@
+#!/bin/zsh
+
+URL="http://127.0.0.1:47831"
+HEALTH_URL="$URL/api/v1/health"
+
+if /usr/bin/curl --silent --fail --max-time 2 "$HEALTH_URL" >/dev/null 2>&1; then
+  /usr/bin/open "$URL"
+  exit 0
+fi
+
+/bin/launchctl kickstart -k "gui/$(/usr/bin/id -u)/local.learning-cockpit" 2>/dev/null || true
+
+for attempt in {1..30}; do
+  if /usr/bin/curl --silent --fail --max-time 2 "$HEALTH_URL" >/dev/null 2>&1; then
+    /usr/bin/open "$URL"
+    exit 0
+  fi
+  /bin/sleep 1
+done
+
+/usr/bin/osascript -e 'display alert "无法启动学习驾驶舱" message "后台服务未能在 30 秒内启动。请查看 ~/Library/Logs/learning-cockpit-error.log。"'
+exit 1
