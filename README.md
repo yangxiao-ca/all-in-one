@@ -88,7 +88,7 @@ ln -s "$(pwd)/Learning" /Users/sam/Obsidian/程序员/Learning
 
 1. **固定入口**：桌面 `学习驾驶舱.app` 始终通过本机连接器打开，避免把浏览器 `localStorage` 当作正式数据源。
 2. **后台自启**：`local.learning-cockpit` LaunchAgent 在登录时启动服务，并在异常退出后自动重启；服务固定读写项目内的 `Learning/`。
-3. **自动异地备份**：`local.learning-cockpit-backup` LaunchAgent 每 5 分钟检查一次，把所有数据变更提交到本地 Git 并推送到私有仓库 `all-in-one-resources`。网络失败不会删除本地提交，后续任务会自动重试推送。
+3. **自动异地备份**：`local.learning-cockpit-backup` LaunchAgent 每天凌晨 3:00 检查一次，把所有数据变更提交到本地 Git 并推送到私有仓库 `all-in-one-resources`。网络失败不会删除本地提交，后续每日任务会自动重试推送。
 
 手动执行一次备份：
 
